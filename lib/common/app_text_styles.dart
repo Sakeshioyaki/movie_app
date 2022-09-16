@@ -2,7 +2,16 @@ import 'package:flutter/material.dart';
 
 class AppTextStyle {
   ///White
+  static const black = TextStyle(color: Colors.black);
   static const white = TextStyle(color: Colors.white);
+
+  //s6
+  static final blackS6 = black.copyWith(fontSize: 6);
+  static final blackS6Bold = blackS6.copyWith(fontWeight: FontWeight.bold);
+
+  static final blackS6Medium = blackS6.copyWith(fontWeight: FontWeight.w500);
+  static final blackS6MediumGrba =
+      blackS6.copyWith(color: Color.fromRGBO(255, 255, 255, 0.5));
   //s9
   static final whiteS8 = white.copyWith(fontSize: 8);
   static final whiteS8Medium = whiteS8.copyWith(fontWeight: FontWeight.w500);
