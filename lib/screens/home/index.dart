@@ -1,6 +1,7 @@
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_app/common/app_text_styles.dart';
+import 'package:movie_app/screens/movie_detail/index.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
@@ -15,76 +16,73 @@ class _MyHomePageState extends State<MyHomePage> {
     double sizeWidth = MediaQuery.of(context).size.width;
     double sizeHeight = MediaQuery.of(context).size.height;
     String name = 'Jane';
-    return Scaffold(
-      body: Container(
-        padding: EdgeInsets.only(top: sizeHeight * 0.084),
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-              begin: Alignment.topRight,
-              end: Alignment.topLeft,
-              colors: [Color(0xff4E4376), Color(0xff2B5876)]),
-        ),
-        height: double.infinity,
-        width: double.infinity,
-        child: Column(
-          children: [
-            buildHeader(name),
-            buildSearch(),
-            Container(
-              alignment: Alignment.centerLeft,
-              padding: const EdgeInsets.symmetric(horizontal: 50),
-              child: Text(
-                'Most Popular',
-                style: AppTextStyle.whiteS18Bold,
-              ),
+    return Container(
+      child: Column(
+        children: [
+          buildHeader(name),
+          buildSearch(),
+          Container(
+            alignment: Alignment.centerLeft,
+            padding: const EdgeInsets.symmetric(horizontal: 50),
+            child: Text(
+              'Most Popular',
+              style: AppTextStyle.whiteS18Bold,
             ),
-            buildPageViewPopular(sizeHeight),
-            buildMenu(sizeWidth, sizeHeight),
-            Container(
-              alignment: Alignment.centerLeft,
-              padding: const EdgeInsets.symmetric(horizontal: 50),
-              child: Text(
-                'Upcoming releases',
-                style: AppTextStyle.whiteS18Bold,
-              ),
+          ),
+          buildPageViewPopular(sizeHeight),
+          buildMenu(sizeWidth, sizeHeight),
+          Container(
+            alignment: Alignment.centerLeft,
+            padding: const EdgeInsets.symmetric(horizontal: 50),
+            child: Text(
+              'Upcoming releases',
+              style: AppTextStyle.whiteS18Bold,
             ),
-            buildUpComing(),
-          ],
-        ),
+          ),
+          buildUpComing(),
+        ],
       ),
     );
   }
 
   Container buildUpComing() {
     return Container(
-      height: 214,
+      height: 220,
       padding: const EdgeInsets.symmetric(vertical: 15),
       width: double.infinity,
       child: Swiper(
           pagination: const SwiperPagination(alignment: Alignment(0, 1.5)),
           itemBuilder: (BuildContext context, int index) {
-            return Container(
-              alignment: Alignment.bottomCenter,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(30),
-                child:
-                    Image.asset('assets/imgs/mv2.jpeg', fit: BoxFit.scaleDown),
+            return GestureDetector(
+              onTap: () => {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  // do something
+                  return const MovieDetai();
+                }))
+              },
+              child: Container(
+                alignment: Alignment.bottomCenter,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(30),
+                  child: Image.asset('assets/imgs/mv2.jpeg',
+                      fit: BoxFit.scaleDown),
+                ),
               ),
             );
           },
           itemCount: 10,
-          viewportFraction: 0.36,
-          scale: 0.85,
+          viewportFraction: 0.38,
+          scale: 1,
           fade: 0.2),
     );
   }
 
   Padding buildMenu(double sizeWidth, double sizeHeight) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: sizeWidth * 0.1, vertical: 30),
+      padding: EdgeInsets.symmetric(horizontal: sizeWidth * 0.1, vertical: 25),
       child: Row(
         children: [
           Container(
@@ -225,70 +223,78 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Container buildPageViewPopular(double sizeHeight) {
     return Container(
-      height: sizeHeight * 0.1522,
+      height: sizeHeight * 0.18,
       padding: const EdgeInsets.symmetric(vertical: 15),
       width: double.infinity,
       child: Swiper(
           pagination: const SwiperPagination(alignment: Alignment(0, 1.9)),
           itemBuilder: (BuildContext context, int index) {
-            return Container(
-              alignment: Alignment.bottomCenter,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30),
-                image: const DecorationImage(
-                  image:
-                      AssetImage('assets/imgs/deadpool-movie-background.png'),
-                  fit: BoxFit.cover,
-                ),
-              ),
+            return GestureDetector(
+              onTap: () => {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  // do something
+                  return const MovieDetai();
+                }))
+              },
               child: Container(
-                width: double.infinity,
-                height: double.infinity,
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(30)),
-                  gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.transparent,
-                        Colors.transparent,
-                        Color(0xff121212)
-                      ]),
-                ),
-                // padding: const EdgeInsets.all(1),
                 alignment: Alignment.bottomCenter,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                  image: const DecorationImage(
+                    image:
+                        AssetImage('assets/imgs/deadpool-movie-background.png'),
+                    fit: BoxFit.cover,
+                  ),
+                ),
                 child: Container(
-                  alignment: Alignment.bottomLeft,
-                  padding:
-                      const EdgeInsets.only(left: 26, bottom: 15, right: 16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Deapool 2',
-                        style: AppTextStyle.whiteS18Bold,
-                      ),
-                      Container(
-                        height: 14,
-                        width: 45,
-                        decoration: BoxDecoration(
-                            color: Colors.yellowAccent,
-                            borderRadius: BorderRadius.circular(15)),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Image.asset(
-                              'assets/imgs/imdb.png',
-                              height: 5,
-                            ),
-                            Text(
-                              '8.5',
-                              style: AppTextStyle.blackS6Bold,
-                            ),
-                          ],
+                  width: double.infinity,
+                  height: double.infinity,
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(30)),
+                    gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.transparent,
+                          Colors.transparent,
+                          Color(0xff121212)
+                        ]),
+                  ),
+                  // padding: const EdgeInsets.all(1),
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    alignment: Alignment.bottomLeft,
+                    padding:
+                        const EdgeInsets.only(left: 26, bottom: 15, right: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Deapool 2',
+                          style: AppTextStyle.whiteS18Bold,
                         ),
-                      ),
-                    ],
+                        Container(
+                          height: 14,
+                          width: 45,
+                          decoration: BoxDecoration(
+                              color: Colors.yellowAccent,
+                              borderRadius: BorderRadius.circular(15)),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Image.asset(
+                                'assets/imgs/imdb.png',
+                                height: 5,
+                              ),
+                              Text(
+                                '8.5',
+                                style: AppTextStyle.blackS6Bold,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
