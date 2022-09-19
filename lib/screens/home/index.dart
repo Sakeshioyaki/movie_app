@@ -48,34 +48,37 @@ class _MyHomePageState extends State<MyHomePage> {
                 style: AppTextStyle.whiteS18Bold,
               ),
             ),
-            Container(
-              height: 214,
-              padding: const EdgeInsets.symmetric(vertical: 15),
-              width: double.infinity,
-              child: Swiper(
-                  pagination:
-                      const SwiperPagination(alignment: Alignment(0, 1.5)),
-                  itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                      alignment: Alignment.bottomCenter,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(30),
-                        child: Image.asset('assets/imgs/mv2.jpeg',
-                            fit: BoxFit.scaleDown),
-                      ),
-                    );
-                  },
-                  itemCount: 10,
-                  viewportFraction: 0.36,
-                  scale: 0.85,
-                  fade: 0.2),
-            ),
+            buildUpComing(),
           ],
         ),
       ),
+    );
+  }
+
+  Container buildUpComing() {
+    return Container(
+      height: 214,
+      padding: const EdgeInsets.symmetric(vertical: 15),
+      width: double.infinity,
+      child: Swiper(
+          pagination: const SwiperPagination(alignment: Alignment(0, 1.5)),
+          itemBuilder: (BuildContext context, int index) {
+            return Container(
+              alignment: Alignment.bottomCenter,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(30),
+                child:
+                    Image.asset('assets/imgs/mv2.jpeg', fit: BoxFit.scaleDown),
+              ),
+            );
+          },
+          itemCount: 10,
+          viewportFraction: 0.36,
+          scale: 0.85,
+          fade: 0.2),
     );
   }
 
