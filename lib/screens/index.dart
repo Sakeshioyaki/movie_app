@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movie_app/screens/home/index.dart';
+import 'package:movie_app/screens/navigator/TabNavigator.dart';
+import 'package:movie_app/screens/navigator/bottom_item.dart';
 
 class BottomApp extends StatefulWidget {
   const BottomApp({super.key});
@@ -10,6 +12,23 @@ class BottomApp extends StatefulWidget {
 
 class _BottomAppState extends State<BottomApp> {
   int _selectedIndex = 0;
+  var _currentTab = TabItem.home;
+  final _navigatorKeys = {
+    TabItem.home: GlobalKey<NavigatorState>(),
+    TabItem.like: GlobalKey<NavigatorState>(),
+    TabItem.ticket: GlobalKey<NavigatorState>(),
+    TabItem.account: GlobalKey<NavigatorState>(),
+    TabItem.shuffle: GlobalKey<NavigatorState>(),
+  };
+  void _onItemTapped(TabItem tabItem) {
+    if (tabItem == _currentTab) {
+      // pop to first route
+      _navigatorKeys[tabItem]!.currentState!.popUntil((route) => route.isFirst);
+    } else {
+      setState(() => _currentTab = tabItem);
+    }
+  }
+
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
@@ -24,34 +43,72 @@ class _BottomAppState extends State<BottomApp> {
     ),
   ];
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
+  // void _onItemTapped(int index) {
+  //   setState(() {
+  //     _selectedIndex = index;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
     double sizeHeight = MediaQuery.of(context).size.height;
-    return Scaffold(
-      body: Container(
-        padding: EdgeInsets.only(top: sizeHeight * 0.084),
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topRight,
-            end: Alignment.topLeft,
-            colors: [Color(0xff4E4376), Color(0xff2B5876)],
-          ),
+    return WillPopScope(
+      onWillPop: () async {
+        final isFirstRouteInCurrentTab =
+            !await _navigatorKeys[_currentTab]!.currentState!.maybePop();
+        if (isFirstRouteInCurrentTab) {
+          // if not on the 'main' tab
+          if (_currentTab != TabItem.home) {
+            // select 'main' tab
+            _onItemTapped(TabItem.home);
+            // back button handled by app
+            return false;
+          }
+        }
+        // let system handle back button if we're on the first route
+        return isFirstRouteInCurrentTab;
+      },
+      child: Scaffold(
+        body:
+            // Container(
+            //   padding: EdgeInsets.only(top: sizeHeight * 0.084),
+            //   decoration: const BoxDecoration(
+            //     gradient: LinearGradient(
+            //       begin: Alignment.topRight,
+            //       end: Alignment.topLeft,
+            //       colors: [Color(0xff4E4376), Color(0xff2B5876)],
+            //     ),
+            //   ),
+            //   height: double.infinity,
+            //   width: double.infinity,
+            //   child: _widgetOptions.elementAt(_selectedIndex),
+            // ),
+            Stack(
+          children: [_buildOffstageNavigator(TabItem.home),
+            _buildOffstageNavigator(TabItem.home),
+            _buildOffstageNavigator(TabItem.home),
+            _buildOffstageNavigator(TabItem.home),],
         ),
-        height: double.infinity,
-        width: double.infinity,
-        child: _widgetOptions.elementAt(_selectedIndex),
+        bottomNavigationBar: buildBottomNavigator(
+          _currentTab, _onItemTapped
+        ),
       ),
-      bottomNavigationBar: buildBottomNavigator(),
     );
   }
 
-  SizedBox buildBottomNavigator() {
+  Widget _buildOffstageNavigator(TabItem tabItem) {
+    return Offstage(
+      offstage: _currentTab != tabItem,
+      child: TabNavigator(
+        navigatorKey: _navigatorKeys[tabItem],
+        tabItem: tabItem,
+      ),
+    );
+  }
+}
+
+
+SizedBox buildBottomNavigator(TabItem currentTab, void Function(TabItem tabItem) onItemTapped) {
     return SizedBox(
       height: 87,
       child: Stack(
@@ -93,7 +150,7 @@ class _BottomAppState extends State<BottomApp> {
             backgroundColor: Colors.transparent,
             showSelectedLabels: false,
             showUnselectedLabels: false,
-            currentIndex: _selectedIndex,
+            currentIndex: _currentTab,
             selectedItemColor: Colors.amber[800],
             onTap: _onItemTapped,
             items: [
