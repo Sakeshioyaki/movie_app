@@ -19,11 +19,22 @@ extension EnvironmentExt on Environment {
   String get baseUrl {
     switch (this) {
       case Environment.dev:
-        return "https://api.themoviedb.org";
+        return "https://api.themoviedb.org/3";
       case Environment.stg:
-        return "https://api.themoviedb.org";
+        return "https://api.themoviedb.org/3";
       case Environment.prod:
-        return "https://api.themoviedb.org";
+        return "https://api.themoviedb.org/3";
+    }
+  }
+
+  String get baseUrlImg {
+    switch (this) {
+      case Environment.dev:
+        return "https://image.tmdb.org/t/p/original";
+      case Environment.stg:
+        return "https://image.tmdb.org/t/p/original";
+      case Environment.prod:
+        return "https://image.tmdb.org/t/p/original";
     }
   }
 }

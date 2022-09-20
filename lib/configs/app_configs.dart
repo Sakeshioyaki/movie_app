@@ -12,6 +12,8 @@ class AppConfigs {
   ///API Env
   static String get baseUrl => env.baseUrl;
 
+  static String get baseUrlImg => env.baseUrlImg;
+
   static String get envName => env.envName;
 
   ///Paging
