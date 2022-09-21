@@ -1,7 +1,13 @@
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_app/common/app_text_styles.dart';
-import 'package:movie_app/screens/movie_detail/index.dart';
+import 'package:movie_app/configs/app_configs.dart';
+import 'package:movie_app/enum/load_status.dart';
+import 'package:movie_app/models/trending_movie/results.dart';
+import 'package:movie_app/screens/home/movie_popular_provider.dart';
+import 'package:movie_app/screens/home/page_view_up_coming.dart';
+import 'package:movie_app/screens/movie_detail/movie_detail.dart';
+import 'package:provider/provider.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
@@ -11,72 +17,136 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  LoadStatus status = LoadStatus.loading;
+  late ListMoviePopularProvider pro;
+  @override
+  void initState() {
+    pro = Provider.of<ListMoviePopularProvider>(context);
+    super.initState();
+    pro.fetchInitialMovies();
+  }
+
   @override
   Widget build(BuildContext context) {
     double sizeWidth = MediaQuery.of(context).size.width;
     double sizeHeight = MediaQuery.of(context).size.height;
     String name = 'Jane';
-    return Container(
-      child: Column(
-        children: [
-          buildHeader(name),
-          buildSearch(),
-          Container(
-            alignment: Alignment.centerLeft,
-            padding: const EdgeInsets.symmetric(horizontal: 50),
-            child: Text(
-              'Most Popular',
-              style: AppTextStyle.whiteS18Bold,
-            ),
+    return Column(
+      children: [
+        buildHeader(name),
+        buildSearch(),
+        Container(
+          alignment: Alignment.centerLeft,
+          padding: const EdgeInsets.symmetric(horizontal: 50),
+          child: Text(
+            'Most Popular',
+            style: AppTextStyle.whiteS18Bold,
           ),
-          buildPageViewPopular(sizeHeight),
-          buildMenu(sizeWidth, sizeHeight),
-          Container(
-            alignment: Alignment.centerLeft,
-            padding: const EdgeInsets.symmetric(horizontal: 50),
-            child: Text(
-              'Upcoming releases',
-              style: AppTextStyle.whiteS18Bold,
-            ),
+        ),
+        buildPageViewPopular(sizeHeight),
+        buildMenu(sizeWidth, sizeHeight),
+        Container(
+          alignment: Alignment.centerLeft,
+          padding: const EdgeInsets.symmetric(horizontal: 50),
+          child: Text(
+            'Upcoming releases',
+            style: AppTextStyle.whiteS18Bold,
           ),
-          buildUpComing(),
-        ],
-      ),
+        ),
+        buildPageViewUpComing(),
+      ],
     );
   }
 
-  Container buildUpComing() {
-    return Container(
-      height: 220,
-      padding: const EdgeInsets.symmetric(vertical: 15),
-      width: double.infinity,
-      child: Swiper(
-          pagination: const SwiperPagination(alignment: Alignment(0, 1.5)),
-          itemBuilder: (BuildContext context, int index) {
-            return GestureDetector(
-              onTap: () => {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  // do something
-                  return const MovieDetai();
-                }))
-              },
-              child: Container(
-                alignment: Alignment.bottomCenter,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30),
+  Widget buildPageViewPopular(double sizeHeight) {
+    return Consumer<ListMoviePopularProvider>(builder: (context, model, _) {
+      return Container(
+        height: sizeHeight * 0.18,
+        padding: const EdgeInsets.symmetric(vertical: 15),
+        width: double.infinity,
+        child: Swiper(
+            pagination: const SwiperPagination(alignment: Alignment(0, 1.9)),
+            itemBuilder: (BuildContext context, int index) {
+              return cardPopular(context, model.listMovie.results?[index]);
+            },
+            itemCount: model.listMovie.results?.length ?? 0,
+            viewportFraction: 0.75,
+            scale: 0.85,
+            fade: 0.5),
+      );
+    });
+  }
+
+  Widget cardPopular(BuildContext context, Results? results) {
+    return GestureDetector(
+      onTap: () => {
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return const MovieDetai();
+        }))
+      },
+      child: Container(
+        alignment: Alignment.bottomCenter,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(30),
+          image: DecorationImage(
+            image: NetworkImage(
+                '${AppConfigs.baseUrlImg}${results?.backdropPath}'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(30)),
+            gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.transparent,
+                  Colors.transparent,
+                  Color(0xff121212)
+                ]),
+          ),
+          alignment: Alignment.bottomCenter,
+          child: Container(
+            alignment: Alignment.bottomLeft,
+            padding: const EdgeInsets.only(left: 26, bottom: 15, right: 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    '${results?.title}',
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyle.whiteS18Bold,
+                  ),
                 ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(30),
-                  child: Image.asset('assets/imgs/mv2.jpeg',
-                      fit: BoxFit.scaleDown),
+                Container(
+                  height: 14,
+                  width: 45,
+                  decoration: BoxDecoration(
+                      color: Colors.yellowAccent,
+                      borderRadius: BorderRadius.circular(15)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Image.asset(
+                        'assets/imgs/imdb.png',
+                        height: 5,
+                      ),
+                      Text(
+                        '8.5',
+                        style: AppTextStyle.blackS6Bold,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            );
-          },
-          itemCount: 10,
-          viewportFraction: 0.38,
-          scale: 1,
-          fade: 0.2),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -96,8 +166,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   begin: Alignment.topRight,
                   end: Alignment.topLeft,
                   colors: [
-                    Color(0xffA1F3FE).withOpacity(0.3),
-                    Color(0xffA6A1E0).withOpacity(0.3)
+                    const Color(0xffA1F3FE).withOpacity(0.3),
+                    const Color(0xffA6A1E0).withOpacity(0.3)
                   ]),
             ),
             child: Column(
@@ -107,7 +177,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   'assets/icons/genres.png',
                   height: 31,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 11,
                 ),
                 Text(
@@ -129,8 +199,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   begin: Alignment.topRight,
                   end: Alignment.topLeft,
                   colors: [
-                    Color(0xffA1F3FE).withOpacity(0.3),
-                    Color(0xffA6A1E0).withOpacity(0.3)
+                    const Color(0xffA1F3FE).withOpacity(0.3),
+                    const Color(0xffA6A1E0).withOpacity(0.3)
                   ]),
             ),
             child: Column(
@@ -140,7 +210,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   'assets/icons/tv-series.png',
                   height: 31,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 11,
                 ),
                 Text(
@@ -162,8 +232,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   begin: Alignment.topRight,
                   end: Alignment.topLeft,
                   colors: [
-                    Color(0xffA1F3FE).withOpacity(0.3),
-                    Color(0xffA6A1E0).withOpacity(0.3)
+                    const Color(0xffA1F3FE).withOpacity(0.3),
+                    const Color(0xffA6A1E0).withOpacity(0.3)
                   ]),
             ),
             child: Column(
@@ -173,7 +243,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   'assets/icons/movies.png',
                   height: 31,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 11,
                 ),
                 Text(
@@ -195,8 +265,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   begin: Alignment.topRight,
                   end: Alignment.topLeft,
                   colors: [
-                    Color(0xffA1F3FE).withOpacity(0.3),
-                    Color(0xffA6A1E0).withOpacity(0.3)
+                    const Color(0xffA1F3FE).withOpacity(0.3),
+                    const Color(0xffA6A1E0).withOpacity(0.3)
                   ]),
             ),
             child: Column(
@@ -206,7 +276,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   'assets/icons/Cinema.png',
                   height: 31,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 11,
                 ),
                 Text(
@@ -218,92 +288,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-    );
-  }
-
-  Container buildPageViewPopular(double sizeHeight) {
-    return Container(
-      height: sizeHeight * 0.18,
-      padding: const EdgeInsets.symmetric(vertical: 15),
-      width: double.infinity,
-      child: Swiper(
-          pagination: const SwiperPagination(alignment: Alignment(0, 1.9)),
-          itemBuilder: (BuildContext context, int index) {
-            return GestureDetector(
-              onTap: () => {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  // do something
-                  return const MovieDetai();
-                }))
-              },
-              child: Container(
-                alignment: Alignment.bottomCenter,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30),
-                  image: const DecorationImage(
-                    image:
-                        AssetImage('assets/imgs/deadpool-movie-background.png'),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                child: Container(
-                  width: double.infinity,
-                  height: double.infinity,
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(30)),
-                    gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.transparent,
-                          Colors.transparent,
-                          Color(0xff121212)
-                        ]),
-                  ),
-                  // padding: const EdgeInsets.all(1),
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    alignment: Alignment.bottomLeft,
-                    padding:
-                        const EdgeInsets.only(left: 26, bottom: 15, right: 16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Deapool 2',
-                          style: AppTextStyle.whiteS18Bold,
-                        ),
-                        Container(
-                          height: 14,
-                          width: 45,
-                          decoration: BoxDecoration(
-                              color: Colors.yellowAccent,
-                              borderRadius: BorderRadius.circular(15)),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Image.asset(
-                                'assets/imgs/imdb.png',
-                                height: 5,
-                              ),
-                              Text(
-                                '8.5',
-                                style: AppTextStyle.blackS6Bold,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            );
-          },
-          itemCount: 10,
-          viewportFraction: 0.75,
-          scale: 0.85,
-          fade: 0.5),
     );
   }
 

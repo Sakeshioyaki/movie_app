@@ -10,13 +10,12 @@ abstract class ApiClient {
   factory ApiClient(Dio dio, {String baseUrl}) = _ApiClient;
 
   @GET("/trending/movie/{time_window}")
-  Future<TrendingMovie> getTrendingMovie(
-    @Path("time_window") String timeWindow,
-    @Query('api_key') String apiKey,
-  );
+  Future<TrendingMovie?> getTrendingMovie(
+      @Path("time_window") String timeWindow, @Query('api_key') String apiKey,
+      {@Query('page') int? page});
 
   @GET("/trending/movie/{time_window}")
-  Future<UpComingMovie> getUpComingMovie(
+  Future<UpComingMovie?> getUpComingMovie(
     @Query('api_key') String apiKey, {
     @Query('language') String? language,
     @Query('page') int? page,

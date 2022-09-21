@@ -1,15 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:movie_app/screens/home/index.dart';
+import 'package:movie_app/screens/home/home.dart';
+import 'package:movie_app/screens/home/movie_popular_provider.dart';
+import 'package:movie_app/screens/home/movie_up_coming_provider.dart';
+import 'package:movie_app/screens/login.dart';
+import 'package:provider/provider.dart';
 
-class BottomApp extends StatefulWidget {
-  const BottomApp({super.key});
+class MyApp extends StatefulWidget {
+  const MyApp({super.key});
 
   @override
-  State<BottomApp> createState() => _BottomAppState();
+  State<MyApp> createState() => _MyAppState();
 }
 
-class _BottomAppState extends State<BottomApp> {
-  int _selectedIndex = 0;
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  int selectedIndex = 0;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
@@ -22,32 +36,49 @@ class _BottomAppState extends State<BottomApp> {
       'Index 2: School',
       style: optionStyle,
     ),
+    Login(),
+    Text(
+      'Index 2: School',
+      style: optionStyle,
+    ),
   ];
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    // setState(() {
+    //   _selectedIndex = index;
+    // });
   }
 
   @override
   Widget build(BuildContext context) {
-    double sizeHeight = MediaQuery.of(context).size.height;
-    return Scaffold(
-      body: Container(
-        padding: EdgeInsets.only(top: sizeHeight * 0.084),
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topRight,
-            end: Alignment.topLeft,
-            colors: [Color(0xff4E4376), Color(0xff2B5876)],
+    // double sizeHeight = MediaQuery.of(context).size.height;
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: MultiProvider(
+        providers: [
+          Provider<ListMoviePopularProvider>(
+              create: (_) => ListMoviePopularProvider()),
+          Provider<ListMovieUpComingProvider>(
+              create: (_) => ListMovieUpComingProvider()),
+        ],
+        child: Scaffold(
+          body: Container(
+            padding: EdgeInsets.only(
+                top: MediaQuery.of(context).size.height * 0.084),
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topRight,
+                end: Alignment.topLeft,
+                colors: [Color(0xff4E4376), Color(0xff2B5876)],
+              ),
+            ),
+            height: double.infinity,
+            width: double.infinity,
+            child: _widgetOptions.elementAt(selectedIndex),
           ),
+          bottomNavigationBar: buildBottomNavigator(),
         ),
-        height: double.infinity,
-        width: double.infinity,
-        child: _widgetOptions.elementAt(_selectedIndex),
       ),
-      bottomNavigationBar: buildBottomNavigator(),
     );
   }
 
@@ -93,7 +124,7 @@ class _BottomAppState extends State<BottomApp> {
             backgroundColor: Colors.transparent,
             showSelectedLabels: false,
             showUnselectedLabels: false,
-            currentIndex: _selectedIndex,
+            currentIndex: selectedIndex,
             selectedItemColor: Colors.amber[800],
             onTap: _onItemTapped,
             items: [
