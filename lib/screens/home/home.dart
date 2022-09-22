@@ -28,7 +28,7 @@ class _HomePageState extends State<HomePage> {
             style: AppTextStyle.whiteS18Bold,
           ),
         ),
-        buildPageViewPopular(sizeHeight),
+        const BuildPageViewPopular(),
         buildMenu(sizeWidth, sizeHeight),
         Container(
           alignment: Alignment.centerLeft,
@@ -38,7 +38,7 @@ class _HomePageState extends State<HomePage> {
             style: AppTextStyle.whiteS18Bold,
           ),
         ),
-        buildPageViewUpComing(),
+        const BuildPageViewUpComing(),
       ],
     );
   }
@@ -184,7 +184,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Padding buildSearch() {
+  Widget buildSearch() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
       child: TextField(

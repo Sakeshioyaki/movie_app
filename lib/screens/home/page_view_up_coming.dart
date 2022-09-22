@@ -108,42 +108,47 @@ var listUpComing = [
   }
 ];
 
-Widget buildPageViewUpComing() {
-  return Container(
-    height: 220,
-    padding: const EdgeInsets.symmetric(vertical: 15),
-    width: double.infinity,
-    child: Swiper(
-        pagination: const SwiperPagination(alignment: Alignment(0, 1.5)),
-        itemBuilder: (BuildContext context, int index) {
-          return cardUpComing(context, index);
-        },
-        itemCount: listUpComing.length,
-        viewportFraction: 0.38,
-        scale: 1,
-        fade: 0.2),
-  );
-}
+class BuildPageViewUpComing extends StatelessWidget {
+  const BuildPageViewUpComing({Key? key}) : super(key: key);
 
-GestureDetector cardUpComing(BuildContext context, int index) {
-  return GestureDetector(
-    onTap: () => {
-      Navigator.push(context, MaterialPageRoute(builder: (context) {
-        // do something
-        return const MovieDetai();
-      }))
-    },
-    child: Container(
-      alignment: Alignment.bottomCenter,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30),
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 220,
+      padding: const EdgeInsets.symmetric(vertical: 15),
+      width: double.infinity,
+      child: Swiper(
+          pagination: const SwiperPagination(alignment: Alignment(0, 1.5)),
+          itemBuilder: (BuildContext context, int index) {
+            return buildCardUpComing(context, index);
+          },
+          itemCount: listUpComing.length,
+          viewportFraction: 0.38,
+          scale: 1,
+          fade: 0.2),
+    );
+  }
+
+  Widget buildCardUpComing(BuildContext context, int index) {
+    return GestureDetector(
+      onTap: () => {
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          // do something
+          return const MovieDetai();
+        }))
+      },
+      child: Container(
+        alignment: Alignment.bottomCenter,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(30),
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(30),
+          child: Image.network(
+              '${AppConfigs.baseUrlImg}${listUpComing[index]['poster_path']}',
+              fit: BoxFit.scaleDown),
+        ),
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(30),
-        child: Image.network(
-            '${AppConfigs.baseUrlImg}${listUpComing[index]['poster_path']}',
-            fit: BoxFit.scaleDown),
-      ),
-    ),
-  );
+    );
+  }
 }
