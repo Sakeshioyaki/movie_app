@@ -48,9 +48,9 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        Provider<ListMoviePopularProvider>(
+        ListenableProvider<ListMoviePopularProvider>(
             create: (context) => ListMoviePopularProvider()),
-        Provider<ListMovieUpComingProvider>(
+        ListenableProvider<ListMovieUpComingProvider>(
             create: (context) => ListMovieUpComingProvider()),
       ],
       child: const BottomLayout(),

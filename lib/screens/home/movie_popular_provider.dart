@@ -7,7 +7,7 @@ import 'package:movie_app/repositories/trending_movies_repository.dart';
 class ListMoviePopularProvider with ChangeNotifier {
   LoadStatus loadStatus = LoadStatus.initial;
   late TrendingMoviesRepository trendingMoviesRepo;
-  late TrendingMovie listMovie;
+  TrendingMovie? listMovie;
 
   // ListMoviePopularProvider({required this.trendingMoviesRepo});
 

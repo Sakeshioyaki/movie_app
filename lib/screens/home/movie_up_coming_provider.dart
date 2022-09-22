@@ -7,7 +7,7 @@ import 'package:movie_app/repositories/up_coming_movie_repository.dart';
 class ListMovieUpComingProvider with ChangeNotifier {
   LoadStatus loadStatus = LoadStatus.initial;
   late UpComingMoviesRepository upComingMoviesRepo;
-  late UpComingMovie listMovie;
+  UpComingMovie? listMovie;
 
   void fetchInitialMovies() async {
     loadStatus = LoadStatus.loading;
