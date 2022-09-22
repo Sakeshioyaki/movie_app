@@ -12,10 +12,6 @@ class BottomLayout extends StatefulWidget {
 class _BottomLayoutState extends State<BottomLayout> {
   @override
   void initState() {
-    // final trendingMovieModel =
-    //     Provider.of<TrendingMoviesRepository>(context, listen: false);
-    //
-    // trendingMovieModel.getTrendingMoviesDay(page: 1);
     super.initState();
   }
 
@@ -45,9 +41,9 @@ class _BottomLayoutState extends State<BottomLayout> {
   ];
 
   void _onItemTapped(int index) {
-    // setState(() {
-    //   __selectedIndex = index;
-    // });
+    setState(() {
+      _selectedIndex = index;
+    });
   }
 
   @override
@@ -72,7 +68,7 @@ class _BottomLayoutState extends State<BottomLayout> {
     );
   }
 
-  SizedBox buildBottomNavigator() {
+  Widget buildBottomNavigator() {
     return SizedBox(
       height: 87,
       child: Stack(
