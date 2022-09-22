@@ -9,14 +9,14 @@ import 'package:movie_app/screens/home/page_view_up_coming.dart';
 import 'package:movie_app/screens/movie_detail/movie_detail.dart';
 import 'package:provider/provider.dart';
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _HomePageState extends State<HomePage> {
   LoadStatus status = LoadStatus.loading;
   late ListMoviePopularProvider pro;
   @override
