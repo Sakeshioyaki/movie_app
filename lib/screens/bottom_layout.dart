@@ -12,6 +12,10 @@ class BottomLayout extends StatefulWidget {
 class _BottomLayoutState extends State<BottomLayout> {
   @override
   void initState() {
+    // final trendingMovieModel =
+    //     Provider.of<TrendingMoviesRepository>(context, listen: false);
+    //
+    // trendingMovieModel.getTrendingMoviesDay(page: 1);
     super.initState();
   }
 

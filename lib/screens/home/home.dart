@@ -43,7 +43,10 @@ class _HomePageState extends State<HomePage> {
             style: AppTextStyle.whiteS18Bold,
           ),
         ),
-        buildPageViewPopular(sizeHeight),
+        Consumer<ListMoviePopularProvider>(
+            builder: (context, listMovie, child) {
+          return buildPageViewPopular(sizeHeight, listMovie);
+        }),
         buildMenu(sizeWidth, sizeHeight),
         Container(
           alignment: Alignment.centerLeft,
@@ -58,7 +61,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget buildPageViewPopular(double sizeHeight) {
+  Widget buildPageViewPopular(
+      double sizeHeight, ListMoviePopularProvider listMovie) {
     return Consumer<ListMoviePopularProvider>(builder: (context, model, _) {
       return Container(
         height: sizeHeight * 0.18,
