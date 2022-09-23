@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movie_app/common/app_text_styles.dart';
 import 'package:movie_app/screens/home/page_view_popular.dart';
-import 'package:movie_app/screens/home/page_view_up_coming.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -16,30 +15,32 @@ class _HomePageState extends State<HomePage> {
     double sizeWidth = MediaQuery.of(context).size.width;
     double sizeHeight = MediaQuery.of(context).size.height;
     String name = 'Jane';
-    return Column(
-      children: [
-        buildHeader(name),
-        buildSearch(),
-        Container(
-          alignment: Alignment.centerLeft,
-          padding: const EdgeInsets.symmetric(horizontal: 50),
-          child: Text(
-            'Most Popular',
-            style: AppTextStyle.whiteS18Bold,
-          ),
-        ),
-        const BuildPageViewPopular(),
-        buildMenu(sizeWidth, sizeHeight),
-        Container(
-          alignment: Alignment.centerLeft,
-          padding: const EdgeInsets.symmetric(horizontal: 50),
-          child: Text(
-            'Upcoming releases',
-            style: AppTextStyle.whiteS18Bold,
-          ),
-        ),
-        const BuildPageViewUpComing(),
-      ],
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          // buildHeader(name),
+          // buildSearch(),
+          // Container(
+          //   alignment: Alignment.centerLeft,
+          //   padding: const EdgeInsets.symmetric(horizontal: 50),
+          //   child: Text(
+          //     'Most Popular',
+          //     style: AppTextStyle.whiteS18Bold,
+          //   ),
+          // ),
+          const PopularPage(),
+          // buildMenu(sizeWidth, sizeHeight),
+          // Container(
+          //   alignment: Alignment.centerLeft,
+          //   padding: const EdgeInsets.symmetric(horizontal: 50),
+          //   child: Text(
+          //     'Upcoming releases',
+          //     style: AppTextStyle.whiteS18Bold,
+          //   ),
+          // ),
+          // const BuildPageViewUpComing(),
+        ],
+      ),
     );
   }
 

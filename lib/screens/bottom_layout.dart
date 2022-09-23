@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movie_app/screens/home/home.dart';
+import 'package:movie_app/screens/home/page_view_popular.dart';
 import 'package:movie_app/screens/login.dart';
 
 class BottomLayout extends StatefulWidget {
@@ -23,22 +24,6 @@ class _BottomLayoutState extends State<BottomLayout> {
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static const List<Widget> _widgetOptions = <Widget>[
-    HomePage(),
-    Text(
-      'Index 1: Business',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 2: School',
-      style: optionStyle,
-    ),
-    Login(),
-    Text(
-      'Index 2: School',
-      style: optionStyle,
-    ),
-  ];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -48,6 +33,22 @@ class _BottomLayoutState extends State<BottomLayout> {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> _widgetOptions = <Widget>[
+      const HomePage(),
+      const Text(
+        'Index 1: Business',
+        style: optionStyle,
+      ),
+      const Text(
+        'Index 2: School',
+        style: optionStyle,
+      ),
+      const Login(),
+      const Text(
+        'Index 2: School',
+        style: optionStyle,
+      ),
+    ];
     // double sizeHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       body: Container(
@@ -62,7 +63,8 @@ class _BottomLayoutState extends State<BottomLayout> {
         ),
         height: double.infinity,
         width: double.infinity,
-        child: _widgetOptions.elementAt(_selectedIndex),
+        child: PopularPage(),
+        //   child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: buildBottomNavigator(),
     );

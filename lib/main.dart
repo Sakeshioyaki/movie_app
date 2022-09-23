@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_app/networks/api_client.dart';
 import 'package:movie_app/networks/api_util.dart';
-import 'package:movie_app/screens/bottom_layout.dart';
-import 'package:movie_app/screens/home/movie_popular_provider.dart';
-import 'package:movie_app/screens/home/movie_up_coming_provider.dart';
+import 'package:movie_app/repositories/trending_movies_repository.dart';
+import 'package:movie_app/repositories/up_coming_movie_repository.dart';
+import 'package:movie_app/screens/home/page_view_popular.dart';
 import 'package:provider/provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-
+  Provider.debugCheckInvalidValueType = null;
   runApp(const MyApp());
 }
 
@@ -46,14 +47,19 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
+    return MultiRepositoryProvider(
       providers: [
-        ListenableProvider<ListMoviePopularProvider>(
-            create: (context) => ListMoviePopularProvider()),
-        ListenableProvider<ListMovieUpComingProvider>(
-            create: (context) => ListMovieUpComingProvider()),
+        RepositoryProvider<TrendingMoviesRepository>(create: (context) {
+          return TrendingMoviesImpl(apiClient: _apiClient);
+        }),
+        RepositoryProvider<UpComingMoviesRepository>(create: (context) {
+          return UpComingMoviesImpl(apiClient: _apiClient);
+        }),
       ],
-      child: const BottomLayout(),
+      child: Container(
+        color: Colors.red,
+        child: const PopularPage(),
+      ),
     );
   }
 }

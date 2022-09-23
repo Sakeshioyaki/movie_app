@@ -6,6 +6,7 @@ import 'package:movie_app/repositories/up_coming_movie_repository.dart';
 
 class ListMovieUpComingProvider with ChangeNotifier {
   LoadStatus loadStatus = LoadStatus.initial;
+
   late UpComingMoviesRepository upComingMoviesRepo;
   UpComingMovie? listMovie;
 
@@ -25,7 +26,13 @@ class ListMovieUpComingProvider with ChangeNotifier {
       }
     } catch (e) {
       loadStatus = LoadStatus.failure;
-      notifyListeners();
     }
+  }
+
+  int a = 0;
+  void updateA() {
+    a = a + 1;
+    print(a);
+    notifyListeners();
   }
 }
