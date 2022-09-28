@@ -17,7 +17,7 @@ class _HomePageState extends State<HomePage> {
     String name = 'Jane';
     return SingleChildScrollView(
       child: Column(
-        children: [
+        children: const [
           // buildHeader(name),
           // buildSearch(),
           // Container(
@@ -28,7 +28,7 @@ class _HomePageState extends State<HomePage> {
           //     style: AppTextStyle.whiteS18Bold,
           //   ),
           // ),
-          const PopularPage(),
+          PopularPage(),
           // buildMenu(sizeWidth, sizeHeight),
           // Container(
           //   alignment: Alignment.centerLeft,

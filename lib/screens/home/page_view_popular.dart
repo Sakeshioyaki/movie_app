@@ -1,73 +1,64 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_app/common/app_text_styles.dart';
 import 'package:movie_app/configs/app_configs.dart';
-import 'package:movie_app/screens/home/movie_up_coming_provider.dart';
+import 'package:movie_app/enum/load_status.dart';
+import 'package:movie_app/screens/home/aaaaa/a_page.dart';
+import 'package:movie_app/screens/home/aaaaa/a_provider.dart';
+import 'package:movie_app/screens/home/movie_popular_provider.dart';
 import 'package:movie_app/screens/movie_detail/movie_detail.dart';
 import 'package:provider/provider.dart';
 
-class PopularPage extends StatelessWidget {
+// class PopularPage extends StatelessWidget {
+//   const PopularPage({Key? key}) : super(key: key);
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return ChangeNotifierProvider(
+//       create: (create) {
+//         return ListMoviePopularProvider(
+//           trendingMoviesRepo:
+//               RepositoryProvider.of<TrendingMoviesRepository>(context),
+//         );
+//       },
+//       child: const BuildPageViewPopular(),
+//     );
+//   }
+// }
+
+class PopularPage extends StatefulWidget {
   const PopularPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (create) {
-        return ListMovieUpComingProvider();
-      },
-      child: const BuildPageViewPopular(),
-    );
-  }
+  State<PopularPage> createState() => _PopularPageState();
 }
 
-class BuildPageViewPopular extends StatefulWidget {
-  const BuildPageViewPopular({Key? key}) : super(key: key);
-
-  @override
-  State<BuildPageViewPopular> createState() => _BuildPageViewPopularState();
-}
-
-class _BuildPageViewPopularState extends State<BuildPageViewPopular> {
-  late ListMovieUpComingProvider pro =
-      context.read<ListMovieUpComingProvider>();
-
+class _PopularPageState extends State<PopularPage> {
   @override
   void initState() {
-    pro.updateA();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Consumer<ListMovieUpComingProvider>(
-        builder: (context, provider, child) {
+      body: Consumer2<ListMoviePopularProvider, AProvider>(
+        builder: (
+          context,
+          popularProvider,
+          aAAProvider,
+          child,
+        ) {
           return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                GestureDetector(
+            child: popularProvider.loadStatus == LoadStatus.loading
+                ? const CircularProgressIndicator()
+                : GestureDetector(
                     onTap: () {
-                      provider.updateA();
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return const APage();
+                      }));
                     },
-                    child: Text(provider.a.toString())),
-                GestureDetector(
-                    onTap: () {
-                      provider.updateA();
-                    },
-                    child: Container(
-                        height: 50,
-                        width: 100,
-                        color: Colors.red,
-                        child: Text(provider.a.toString()))),
-                GestureDetector(
-                    onTap: () {
-                      provider.updateA();
-                    },
-                    child: Text(provider.a.toString())),
-              ],
-            ),
+                    child: Text('${aAAProvider.a}')),
           );
         },
       ),

@@ -9,14 +9,15 @@ class ListMoviePopularProvider with ChangeNotifier {
   late TrendingMoviesRepository trendingMoviesRepo;
   TrendingMovie? listMovie;
 
-  // ListMoviePopularProvider({required this.trendingMoviesRepo});
+  ListMoviePopularProvider({required this.trendingMoviesRepo});
+
+  int a = 0;
 
   void fetchInitialMovies() async {
     loadStatus = LoadStatus.loading;
     notifyListeners();
     try {
       final result = await trendingMoviesRepo.getTrendingMoviesDay(page: 1);
-
       if (result != null) {
         print(result.totalPages);
         loadStatus = LoadStatus.success;
@@ -31,5 +32,10 @@ class ListMoviePopularProvider with ChangeNotifier {
       loadStatus = LoadStatus.failure;
       notifyListeners();
     }
+  }
+
+  void updateA() {
+    a = a++;
+    notifyListeners();
   }
 }
