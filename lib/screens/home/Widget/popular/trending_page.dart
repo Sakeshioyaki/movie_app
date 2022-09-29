@@ -38,12 +38,9 @@ class MoviesChildPage extends StatefulWidget {
 class _MoviesChildPageState extends State<MoviesChildPage> {
   late TrendingCubit _cubit;
 
-  final _scrollController = ScrollController();
-
   @override
   void initState() {
     super.initState();
-    // _scrollController.addListener(_onScroll);
     final trendingRepo =
         RepositoryProvider.of<TrendingMoviesRepository>(context);
     _cubit = TrendingCubit(
@@ -54,14 +51,46 @@ class _MoviesChildPageState extends State<MoviesChildPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<TrendingCubit, TrendingState>(
+    return BlocConsumer<TrendingCubit, TrendingState>(
       bloc: _cubit,
-      builder: (context, state) {
+      listenWhen: (pre, current) {
+        print('${pre.loadMovieStatus} -- ${current.loadMovieStatus}');
+        return current.loadMovieStatus == LoadStatus.loading ||
+            current.loadMovieStatus == LoadStatus.success;
+      },
+      listener: (context, state) {
         if (state.loadMovieStatus == LoadStatus.loading) {
-          return buildLoadingList();
-        } else if (state.loadMovieStatus == LoadStatus.failure) {
-          return Container();
+          print('loadingggggggg .....');
+          // Navigate to next screen
+          // showDialog(
+          //     context: context,
+          //     builder: (context) {
+          //       return Center(child: CircularProgressIndicator());
+          //     });
+        } else if (state.loadMovieStatus == LoadStatus.success) {
+          // Report to analytics
+          print('Succcess.....');
         } else {
+          print('check else ${state.loadMovieStatus.name} -- ');
+        }
+      },
+      buildWhen: (pre, state) {
+        return state.loadMovieStatus == LoadStatus.success ||
+            state.loadMovieStatus == LoadStatus.loading ||
+            state.loadMovieStatus == LoadStatus.failure;
+      },
+      builder: (context, state) {
+        if (state.loadMovieStatus == LoadStatus.failure) {
+          return Text('faild to load');
+        } else if (state.loadMovieStatus == LoadStatus.loading) {
+          print('loading');
+
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else {
+          // print('successssssssss');
+          // Navigator.pop(context);
           return buildSuccessList(
             state.movies,
           );
@@ -74,7 +103,7 @@ class _MoviesChildPageState extends State<MoviesChildPage> {
     return RefreshIndicator(
       onRefresh: _onRefreshData,
       child: GridView.builder(
-        controller: _scrollController,
+        // controller: _scrollController,
         padding: const EdgeInsets.symmetric(horizontal: 15),
         itemBuilder: (context, index) {
           final item = items[index];
@@ -97,13 +126,20 @@ class _MoviesChildPageState extends State<MoviesChildPage> {
     );
   }
 
-  Widget buildLoadingList() {
-    return const Center(
-      child: Text('loading lisstttttt '),
-    );
-  }
+  // Widget buildLoadingList() {
+  //   return const Center(
+  //     child: Text('loading lisstttttt '),
+  //   );
+  // }
+
+  // Future<void> _onRefreshData() async {
+  //   _cubit.fetchInitialTrendingMovies();
+  // }
 
   Future<void> _onRefreshData() async {
+    // monitor network fetch
+    await Future.delayed(const Duration(milliseconds: 1000));
+    // if failed,use refreshFailed()
     _cubit.fetchInitialTrendingMovies();
   }
 }

@@ -4,4 +4,8 @@ enum LoadStatus {
   success,
   failure,
   loadingMore,
+  orderInProgress,
+  orderRequested,
+  orderCompleted,
+  orderRefunded
 }

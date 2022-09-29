@@ -11,9 +11,12 @@ class TrendingCubit extends Cubit<TrendingState> {
   }) : super(const TrendingState());
 
   void fetchInitialTrendingMovies() async {
-    emit(state.copyWith(loadMovieStatus: LoadStatus.loading));
+    emit(state.copyWith(
+      loadMovieStatus: LoadStatus.loading,
+    ));
     try {
       final result = await trendingRes.getTrendingMoviesDay(page: 1);
+      await Future.delayed(const Duration(milliseconds: 3000));
       emit(state.copyWith(
           loadMovieStatus: LoadStatus.success,
           movies: result?.results,

@@ -48,138 +48,10 @@ class _HomePageState extends State<HomePage> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: sizeWidth * 0.1, vertical: 25),
       child: Row(
-        children: [
-          Container(
-            height: sizeHeight * 0.1025,
-            width: sizeWidth * 0.1518,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              border:
-                  Border.all(color: const Color(0xFFFFFFFF).withOpacity(0.2)),
-              gradient: LinearGradient(
-                  begin: Alignment.topRight,
-                  end: Alignment.topLeft,
-                  colors: [
-                    const Color(0xffA1F3FE).withOpacity(0.3),
-                    const Color(0xffA6A1E0).withOpacity(0.3)
-                  ]),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  'assets/icons/genres.png',
-                  height: 31,
-                ),
-                const SizedBox(
-                  height: 11,
-                ),
-                Text(
-                  'Genres',
-                  style: AppTextStyle.whiteS9,
-                )
-              ],
-            ),
-          ),
-          SizedBox(width: sizeWidth * 0.04),
-          Container(
-            height: sizeHeight * 0.1025,
-            width: sizeWidth * 0.1518,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              border:
-                  Border.all(color: const Color(0xFFFFFFFF).withOpacity(0.2)),
-              gradient: LinearGradient(
-                  begin: Alignment.topRight,
-                  end: Alignment.topLeft,
-                  colors: [
-                    const Color(0xffA1F3FE).withOpacity(0.3),
-                    const Color(0xffA6A1E0).withOpacity(0.3)
-                  ]),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  'assets/icons/tv-series.png',
-                  height: 31,
-                ),
-                const SizedBox(
-                  height: 11,
-                ),
-                Text(
-                  'TV series',
-                  style: AppTextStyle.whiteS9,
-                )
-              ],
-            ),
-          ),
-          SizedBox(width: sizeWidth * 0.04),
-          Container(
-            height: sizeHeight * 0.1025,
-            width: sizeWidth * 0.1518,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              border:
-                  Border.all(color: const Color(0xFFFFFFFF).withOpacity(0.2)),
-              gradient: LinearGradient(
-                  begin: Alignment.topRight,
-                  end: Alignment.topLeft,
-                  colors: [
-                    const Color(0xffA1F3FE).withOpacity(0.3),
-                    const Color(0xffA6A1E0).withOpacity(0.3)
-                  ]),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  'assets/icons/movies.png',
-                  height: 31,
-                ),
-                const SizedBox(
-                  height: 11,
-                ),
-                Text(
-                  'Movies',
-                  style: AppTextStyle.whiteS9,
-                )
-              ],
-            ),
-          ),
-          SizedBox(width: sizeWidth * 0.04),
-          Container(
-            height: sizeHeight * 0.1025,
-            width: sizeWidth * 0.1518,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              border:
-                  Border.all(color: const Color(0xFFFFFFFF).withOpacity(0.2)),
-              gradient: LinearGradient(
-                  begin: Alignment.topRight,
-                  end: Alignment.topLeft,
-                  colors: [
-                    const Color(0xffA1F3FE).withOpacity(0.3),
-                    const Color(0xffA6A1E0).withOpacity(0.3)
-                  ]),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  'assets/icons/Cinema.png',
-                  height: 31,
-                ),
-                const SizedBox(
-                  height: 11,
-                ),
-                Text(
-                  'In Theatre',
-                  style: AppTextStyle.whiteS9,
-                )
-              ],
-            ),
-          ),
+        children: const [
+          Center(
+            child: CircularProgressIndicator(),
+          )
         ],
       ),
     );
@@ -193,12 +65,18 @@ class _HomePageState extends State<HomePage> {
         decoration: InputDecoration(
           constraints: const BoxConstraints(minHeight: 50, maxHeight: 50),
           enabledBorder: OutlineInputBorder(
-              borderSide:
-                  BorderSide(color: Colors.white.withOpacity(0.5), width: 1),
-              borderRadius: const BorderRadius.all(Radius.circular(15.0))),
+            borderSide:
+                BorderSide(color: Colors.white.withOpacity(0.5), width: 1),
+            borderRadius: const BorderRadius.all(
+              Radius.circular(15.0),
+            ),
+          ),
           focusedBorder: const OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.white, width: 1),
-              borderRadius: BorderRadius.all(Radius.circular(15.0))),
+            borderSide: BorderSide(color: Colors.white, width: 1),
+            borderRadius: BorderRadius.all(
+              Radius.circular(15.0),
+            ),
+          ),
           prefixIcon: Padding(
             padding: const EdgeInsets.all(14),
             child: Image.asset(

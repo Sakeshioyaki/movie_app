@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:movie_app/screens/home/Widget/popular/trending_page.dart';
-import 'package:movie_app/screens/home/home_page.dart';
 import 'package:movie_app/screens/login.dart';
+
+import 'home/Widget/popular/trending_page.dart';
 
 class BottomLayout extends StatefulWidget {
   const BottomLayout({super.key});
@@ -34,7 +34,7 @@ class _BottomLayoutState extends State<BottomLayout> {
   @override
   Widget build(BuildContext context) {
     List<Widget> _widgetOptions = <Widget>[
-      const HomePage(),
+      const PageTrendingMovies(),
       const Text(
         'Index 1: Business',
         style: optionStyle,
@@ -63,8 +63,8 @@ class _BottomLayoutState extends State<BottomLayout> {
         ),
         height: double.infinity,
         width: double.infinity,
-        child: PageTrendingMovies(),
-        //   child: _widgetOptions.elementAt(_selectedIndex),
+        // child: PageTrendingMovies(),
+        child: _widgetOptions.elementAt(0),
       ),
       bottomNavigationBar: buildBottomNavigator(),
     );
