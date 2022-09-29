@@ -41,11 +41,7 @@ class _MoviesChildPageState extends State<MoviesChildPage> {
   @override
   void initState() {
     super.initState();
-    final trendingRepo =
-        RepositoryProvider.of<TrendingMoviesRepository>(context);
-    _cubit = TrendingCubit(
-      trendingRes: trendingRepo,
-    );
+    _cubit = context.read<TrendingCubit>();
     _cubit.fetchInitialTrendingMovies();
   }
 
@@ -84,7 +80,6 @@ class _MoviesChildPageState extends State<MoviesChildPage> {
           return Text('faild to load');
         } else if (state.loadMovieStatus == LoadStatus.loading) {
           print('loading');
-
           return const Center(
             child: CircularProgressIndicator(),
           );
