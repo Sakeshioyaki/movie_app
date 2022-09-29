@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:movie_app/screens/home/home.dart';
-import 'package:movie_app/screens/home/page_view_popular.dart';
+import 'package:movie_app/screens/home/Widget/popular/trending_page.dart';
+import 'package:movie_app/screens/home/home_page.dart';
 import 'package:movie_app/screens/login.dart';
 
 class BottomLayout extends StatefulWidget {
@@ -63,7 +63,7 @@ class _BottomLayoutState extends State<BottomLayout> {
         ),
         height: double.infinity,
         width: double.infinity,
-        child: PopularPage(),
+        child: PageTrendingMovies(),
         //   child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: buildBottomNavigator(),

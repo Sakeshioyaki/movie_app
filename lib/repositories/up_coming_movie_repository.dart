@@ -1,5 +1,5 @@
 import 'package:movie_app/configs/app_configs.dart';
-import 'package:movie_app/models/up_coming/up_coming_movie.dart';
+import 'package:movie_app/models/movie/up_coming/up_coming_movie.dart';
 import 'package:movie_app/networks/api_client.dart';
 
 abstract class UpComingMoviesRepository {

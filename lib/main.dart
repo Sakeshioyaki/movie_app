@@ -4,7 +4,7 @@ import 'package:movie_app/networks/api_client.dart';
 import 'package:movie_app/networks/api_util.dart';
 import 'package:movie_app/repositories/trending_movies_repository.dart';
 import 'package:movie_app/repositories/up_coming_movie_repository.dart';
-import 'package:movie_app/screens/home/page_view_popular.dart';
+import 'package:movie_app/screens/bottom_layout.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -58,7 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ],
       child: Container(
         color: Colors.red,
-        child: const PopularPage(),
+        child: const BottomLayout(),
       ),
     );
   }

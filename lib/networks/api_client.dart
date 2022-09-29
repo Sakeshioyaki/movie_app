@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:movie_app/models/trending_movie/trending_movie.dart';
-import 'package:movie_app/models/up_coming/up_coming_movie.dart';
+import 'package:movie_app/models/movie/trending_movie/trending_movie.dart';
+import 'package:movie_app/models/movie/up_coming/up_coming_movie.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'api_client.g.dart';

@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:movie_app/models/up_coming/dates.dart';
-import 'package:movie_app/models/up_coming/results.dart';
+import 'package:movie_app/models/movie/movie.dart';
+import 'package:movie_app/models/movie/up_coming/dates.dart';
 
 part 'up_coming_movie.g.dart';
 
@@ -8,18 +8,14 @@ part 'up_coming_movie.g.dart';
 class UpComingMovie {
   Dates? dates;
   int? page;
-  List<Results>? results;
+  List<Movie>? results;
   @JsonKey(name: 'total_pages')
   int? totalPages;
-  @JsonKey(name: 'total_results')
-  int? totalResults;
+  @JsonKey(name: 'total_Movie')
+  int? totalMovie;
 
   UpComingMovie(
-      {this.dates,
-      this.page,
-      this.results,
-      this.totalPages,
-      this.totalResults});
+      {this.dates, this.page, this.results, this.totalPages, this.totalMovie});
 
   factory UpComingMovie.fromJson(Map<String, dynamic> json) =>
       _$UpComingMovieFromJson(json);

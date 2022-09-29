@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movie_app/common/app_text_styles.dart';
-import 'package:movie_app/screens/home/page_view_popular.dart';
+import 'package:movie_app/screens/home/Widget/popular/trending_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -18,26 +18,26 @@ class _HomePageState extends State<HomePage> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          // buildHeader(name),
-          // buildSearch(),
-          // Container(
-          //   alignment: Alignment.centerLeft,
-          //   padding: const EdgeInsets.symmetric(horizontal: 50),
-          //   child: Text(
-          //     'Most Popular',
-          //     style: AppTextStyle.whiteS18Bold,
-          //   ),
-          // ),
-          const PopularPage(),
-          // buildMenu(sizeWidth, sizeHeight),
-          // Container(
-          //   alignment: Alignment.centerLeft,
-          //   padding: const EdgeInsets.symmetric(horizontal: 50),
-          //   child: Text(
-          //     'Upcoming releases',
-          //     style: AppTextStyle.whiteS18Bold,
-          //   ),
-          // ),
+          buildHeader(name),
+          buildSearch(),
+          Container(
+            alignment: Alignment.centerLeft,
+            padding: const EdgeInsets.symmetric(horizontal: 50),
+            child: Text(
+              'Most Popular',
+              style: AppTextStyle.whiteS18Bold,
+            ),
+          ),
+          buildTrendingMovies(),
+          buildMenu(sizeWidth, sizeHeight),
+          Container(
+            alignment: Alignment.centerLeft,
+            padding: const EdgeInsets.symmetric(horizontal: 50),
+            child: Text(
+              'Upcoming releases',
+              style: AppTextStyle.whiteS18Bold,
+            ),
+          ),
           // const BuildPageViewUpComing(),
         ],
       ),
@@ -264,5 +264,9 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     );
+  }
+
+  Widget buildTrendingMovies() {
+    return const PageTrendingMovies();
   }
 }

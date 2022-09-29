@@ -1,12 +1,12 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:movie_app/models/trending_movie/results.dart';
+import 'package:movie_app/models/movie/movie.dart';
 
 part 'trending_movie.g.dart';
 
 @JsonSerializable()
 class TrendingMovie {
   int? page;
-  List<Results>? results;
+  List<Movie>? results;
   @JsonKey(name: 'total_pages')
   int? totalPages;
   @JsonKey(name: 'total_results')

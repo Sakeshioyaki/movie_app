@@ -1,11 +1,12 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:movie_app/configs/app_configs.dart';
 
-part 'results.g.dart';
+part 'movie.g.dart';
 
 @JsonSerializable()
-class Results {
+class Movie {
   bool? adult;
-  @JsonKey(name: 'total_pages')
+  @JsonKey(name: 'backdrop_path')
   String? backdropPath;
   int? id;
   String? title;
@@ -20,6 +21,7 @@ class Results {
   String? mediaType;
   @JsonKey(name: 'genre_ids')
   List<int>? genreIds;
+  @JsonKey(name: 'popularity')
   num? popularity;
   @JsonKey(name: 'release_date')
   String? releaseDate;
@@ -29,7 +31,7 @@ class Results {
   @JsonKey(name: 'vote_count')
   int? voteCount;
 
-  Results(
+  Movie(
       {this.adult,
       this.backdropPath,
       this.id,
@@ -45,7 +47,11 @@ class Results {
       this.video,
       this.voteAverage,
       this.voteCount});
-  factory Results.fromJson(Map<String, dynamic> json) =>
-      _$ResultsFromJson(json);
-  Map<String, dynamic> toJson() => _$ResultsToJson(this);
+  factory Movie.fromJson(Map<String, dynamic> json) => _$MovieFromJson(json);
+  Map<String, dynamic> toJson() => _$MovieToJson(this);
+
+  @JsonKey(ignore: true)
+  String get posterUrl {
+    return '${AppConfigs.baseUrlImg}${posterPath ?? ""}';
+  }
 }
