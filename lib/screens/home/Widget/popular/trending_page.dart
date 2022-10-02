@@ -1,3 +1,4 @@
+import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_app/common/app_text_styles.dart';
@@ -7,7 +8,6 @@ import 'package:movie_app/models/movie/movie.dart';
 import 'package:movie_app/repositories/trending_movies_repository.dart';
 import 'package:movie_app/screens/home/Widget/popular/trending_cubit.dart';
 import 'package:movie_app/screens/home/Widget/popular/trending_state.dart';
-import 'package:movie_app/screens/home/Widget/popular/widget/movie_widget.dart';
 import 'package:movie_app/screens/movie_detail/movie_detail.dart';
 
 class PageTrendingMovies extends StatelessWidget {
@@ -57,12 +57,6 @@ class _MoviesChildPageState extends State<MoviesChildPage> {
       listener: (context, state) {
         if (state.loadMovieStatus == LoadStatus.loading) {
           print('loadingggggggg .....');
-          // Navigate to next screen
-          // showDialog(
-          //     context: context,
-          //     builder: (context) {
-          //       return Center(child: CircularProgressIndicator());
-          //     });
         } else if (state.loadMovieStatus == LoadStatus.success) {
           // Report to analytics
           print('Succcess.....');
@@ -77,15 +71,13 @@ class _MoviesChildPageState extends State<MoviesChildPage> {
       },
       builder: (context, state) {
         if (state.loadMovieStatus == LoadStatus.failure) {
-          return Text('faild to load');
+          return const Text('faild to load');
         } else if (state.loadMovieStatus == LoadStatus.loading) {
           print('loading');
           return const Center(
             child: CircularProgressIndicator(),
           );
         } else {
-          // print('successssssssss');
-          // Navigator.pop(context);
           return buildSuccessList(
             state.movies,
           );
@@ -95,48 +87,125 @@ class _MoviesChildPageState extends State<MoviesChildPage> {
   }
 
   Widget buildSuccessList(List<Movie> items) {
+    double sizeHeight = MediaQuery.of(context).size.height;
     return RefreshIndicator(
       onRefresh: _onRefreshData,
-      child: GridView.builder(
-        // controller: _scrollController,
-        padding: const EdgeInsets.symmetric(horizontal: 15),
-        itemBuilder: (context, index) {
-          final item = items[index];
-          return MovieWidget(
-            movie: item,
-            onPressed: () {
-              print('() => MovieDetailPage(movie: item)');
+      child: Container(
+        height: sizeHeight * 0.18,
+        padding: const EdgeInsets.symmetric(vertical: 15),
+        width: double.infinity,
+        child: Swiper(
+            pagination: SwiperCustomPagination(
+              builder: (BuildContext context, SwiperPluginConfig config) {
+                Widget child = Container(
+                  // margin: ,
+                  child: DotSwiperPaginationBuilder(
+                    color: Colors.white.withOpacity(0.3),
+                    size: 8,
+                    space: 5,
+                    activeColor: const Color(0xff64ABDB),
+                  ).build(context, config),
+                );
+                if (!config.outer!) {
+                  child = Align(
+                    alignment: const Alignment(0, 1.5),
+                    child: child,
+                  );
+                }
+                return child;
+              },
+            ),
+            itemBuilder: (BuildContext context, int index) {
+              return cardBuild(context, index, items);
             },
-          );
-        },
-        itemCount: items.length,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 15,
-          mainAxisSpacing: 15,
-          childAspectRatio: 3 / 4,
-        ),
-        // controller: _scrollController,
+            itemCount: 10,
+            viewportFraction: 0.75,
+            scale: 0.85,
+            fade: 0.5),
       ),
     );
   }
 
-  // Widget buildLoadingList() {
-  //   return const Center(
-  //     child: Text('loading lisstttttt '),
-  //   );
-  // }
-
-  // Future<void> _onRefreshData() async {
-  //   _cubit.fetchInitialTrendingMovies();
-  // }
+  Widget cardBuild(BuildContext context, int index, List<Movie> items) {
+    return GestureDetector(
+      onTap: () => {
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return const MovieDetai();
+        }))
+      },
+      child: Container(
+        alignment: Alignment.bottomCenter,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(30),
+          image: DecorationImage(
+            image: NetworkImage(
+                '${AppConfigs.baseUrlImg}${items[index].backdropPath}'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(30)),
+            gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.transparent,
+                  Colors.transparent,
+                  Color(0xff121212)
+                ]),
+          ),
+          alignment: Alignment.bottomCenter,
+          child: Container(
+            alignment: Alignment.bottomLeft,
+            padding: const EdgeInsets.only(left: 26, bottom: 15, right: 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    '${items[index].title}',
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyle.whiteS18Bold,
+                  ),
+                ),
+                Container(
+                  height: 14,
+                  width: 45,
+                  decoration: BoxDecoration(
+                      color: Colors.yellowAccent,
+                      borderRadius: BorderRadius.circular(15)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Image.asset(
+                        'assets/imgs/imdb.png',
+                        height: 5,
+                      ),
+                      Text(
+                        '8.5',
+                        style: AppTextStyle.blackS6Bold,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
   Future<void> _onRefreshData() async {
-    // monitor network fetch
     await Future.delayed(const Duration(milliseconds: 1000));
-    // if failed,use refreshFailed()
     _cubit.fetchInitialTrendingMovies();
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 Widget cardBuild(BuildContext context, int index, String path, String title) {
@@ -172,7 +241,11 @@ Widget cardBuild(BuildContext context, int index, String path, String title) {
         alignment: Alignment.bottomCenter,
         child: Container(
           alignment: Alignment.bottomLeft,
-          padding: const EdgeInsets.only(left: 26, bottom: 15, right: 16),
+          padding: const EdgeInsets.only(
+            left: 26,
+            bottom: 15,
+            right: 16,
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

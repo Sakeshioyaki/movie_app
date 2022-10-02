@@ -13,6 +13,6 @@ class UpComingMoviesImpl extends UpComingMoviesRepository {
 
   @override
   Future<UpComingMovie?> getUpComingMovies({int? page}) async {
-    return apiClient.getUpComingMovie(MovieAPIConfig.apiKey, page: page);
+    return apiClient.getUpComingMovie(MovieAPIConfig.apiKey, page);
   }
 }

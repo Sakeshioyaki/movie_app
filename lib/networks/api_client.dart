@@ -14,11 +14,11 @@ abstract class ApiClient {
       @Path("time_window") String timeWindow, @Query('api_key') String apiKey,
       {@Query('page') int? page});
 
-  @GET("/trending/movie/{time_window}")
+  @GET("/movie/upcoming")
   Future<UpComingMovie?> getUpComingMovie(
-    @Query('api_key') String apiKey, {
+    @Query('api_key') String apiKey,
+    @Query('page') int? page, {
     @Query('language') String? language,
-    @Query('page') int? page,
     @Query('region') String? region,
   });
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:movie_app/screens/home/home_page.dart';
 import 'package:movie_app/screens/login.dart';
-
-import 'home/Widget/popular/trending_page.dart';
 
 class BottomLayout extends StatefulWidget {
   const BottomLayout({super.key});
@@ -10,11 +9,15 @@ class BottomLayout extends StatefulWidget {
   State<BottomLayout> createState() => _BottomLayoutState();
 }
 
-class _BottomLayoutState extends State<BottomLayout> {
+class _BottomLayoutState extends State<BottomLayout>
+    with AutomaticKeepAliveClientMixin {
   @override
   void initState() {
     super.initState();
   }
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void dispose() {
@@ -25,7 +28,8 @@ class _BottomLayoutState extends State<BottomLayout> {
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
-  void _onItemTapped(int index) {
+  final pageController = PageController();
+  void onPageChanged(int index) {
     setState(() {
       _selectedIndex = index;
     });
@@ -34,7 +38,7 @@ class _BottomLayoutState extends State<BottomLayout> {
   @override
   Widget build(BuildContext context) {
     List<Widget> _widgetOptions = <Widget>[
-      const PageTrendingMovies(),
+      const HomePage(),
       const Text(
         'Index 1: Business',
         style: optionStyle,
@@ -64,7 +68,11 @@ class _BottomLayoutState extends State<BottomLayout> {
         height: double.infinity,
         width: double.infinity,
         // child: PageTrendingMovies(),
-        child: _widgetOptions.elementAt(0),
+        child: PageView(
+          controller: pageController,
+          onPageChanged: onPageChanged,
+          children: _widgetOptions,
+        ),
       ),
       bottomNavigationBar: buildBottomNavigator(),
     );
@@ -114,7 +122,9 @@ class _BottomLayoutState extends State<BottomLayout> {
             showUnselectedLabels: false,
             currentIndex: _selectedIndex,
             selectedItemColor: Colors.amber[800],
-            onTap: _onItemTapped,
+            onTap: (int index) {
+              pageController.jumpToPage(index);
+            },
             items: [
               BottomNavigationBarItem(
                 icon: Align(
