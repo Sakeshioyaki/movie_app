@@ -1,13 +1,10 @@
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:movie_app/common/app_text_styles.dart';
 import 'package:movie_app/configs/app_configs.dart';
 import 'package:movie_app/enum/load_status.dart';
-import 'package:movie_app/models/movie/movie.dart';
-import 'package:movie_app/repositories/trending_movies_repository.dart';
-import 'package:movie_app/screens/home/Widget/popular/trending_cubit.dart';
-import 'package:movie_app/screens/home/Widget/popular/trending_state.dart';
+import 'package:movie_app/screens/home/Widget/popular/trending_controller.dart';
 import 'package:movie_app/screens/movie_detail/movie_detail.dart';
 
 class PageTrendingMovies extends StatelessWidget {
@@ -17,14 +14,7 @@ class PageTrendingMovies extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) {
-        return TrendingCubit(
-          trendingRes: context.read<TrendingMoviesRepository>(),
-        );
-      },
-      child: const MoviesChildPage(),
-    );
+    return const MoviesChildPage();
   }
 }
 
@@ -36,57 +26,24 @@ class MoviesChildPage extends StatefulWidget {
 }
 
 class _MoviesChildPageState extends State<MoviesChildPage> {
-  late TrendingCubit _cubit;
-
+  TrendingController controller =
+      Get.put<TrendingController>(TrendingController());
   @override
   void initState() {
+    controller.fetchInitialTrendingMovies();
     super.initState();
-    _cubit = context.read<TrendingCubit>();
-    _cubit.fetchInitialTrendingMovies();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<TrendingCubit, TrendingState>(
-      bloc: _cubit,
-      listenWhen: (pre, current) {
-        print('${pre.loadMovieStatus} -- ${current.loadMovieStatus}');
-        return current.loadMovieStatus == LoadStatus.loading ||
-            current.loadMovieStatus == LoadStatus.success;
-      },
-      listener: (context, state) {
-        if (state.loadMovieStatus == LoadStatus.loading) {
-          print('loadingggggggg .....');
-        } else if (state.loadMovieStatus == LoadStatus.success) {
-          // Report to analytics
-          print('Succcess.....');
-        } else {
-          print('check else ${state.loadMovieStatus.name} -- ');
-        }
-      },
-      buildWhen: (pre, state) {
-        return state.loadMovieStatus == LoadStatus.success ||
-            state.loadMovieStatus == LoadStatus.loading ||
-            state.loadMovieStatus == LoadStatus.failure;
-      },
-      builder: (context, state) {
-        if (state.loadMovieStatus == LoadStatus.failure) {
-          return const Text('faild to load');
-        } else if (state.loadMovieStatus == LoadStatus.loading) {
-          print('loading');
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        } else {
-          return buildSuccessList(
-            state.movies,
-          );
-        }
-      },
+    return GetX<TrendingController>(
+      builder: (_) => _.loadMovieStatus.value == LoadStatus.loading
+          ? const CircularProgressIndicator()
+          : buildSuccessList(),
     );
   }
 
-  Widget buildSuccessList(List<Movie> items) {
+  Widget buildSuccessList() {
     double sizeHeight = MediaQuery.of(context).size.height;
     return RefreshIndicator(
       onRefresh: _onRefreshData,
@@ -116,7 +73,7 @@ class _MoviesChildPageState extends State<MoviesChildPage> {
               },
             ),
             itemBuilder: (BuildContext context, int index) {
-              return cardBuild(context, index, items);
+              return cardBuild(context, index);
             },
             itemCount: 10,
             viewportFraction: 0.75,
@@ -126,7 +83,7 @@ class _MoviesChildPageState extends State<MoviesChildPage> {
     );
   }
 
-  Widget cardBuild(BuildContext context, int index, List<Movie> items) {
+  Widget cardBuild(BuildContext context, int index) {
     return GestureDetector(
       onTap: () => {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -139,7 +96,7 @@ class _MoviesChildPageState extends State<MoviesChildPage> {
           borderRadius: BorderRadius.circular(30),
           image: DecorationImage(
             image: NetworkImage(
-                '${AppConfigs.baseUrlImg}${items[index].backdropPath}'),
+                '${AppConfigs.baseUrlImg}${controller.listMovieTrending.value[index].backdropPath}'),
             fit: BoxFit.cover,
           ),
         ),
@@ -166,7 +123,7 @@ class _MoviesChildPageState extends State<MoviesChildPage> {
               children: [
                 Expanded(
                   child: Text(
-                    '${items[index].title}',
+                    '${controller.listMovieTrending.value[index].title}',
                     overflow: TextOverflow.ellipsis,
                     style: AppTextStyle.whiteS18Bold,
                   ),
@@ -201,7 +158,7 @@ class _MoviesChildPageState extends State<MoviesChildPage> {
 
   Future<void> _onRefreshData() async {
     await Future.delayed(const Duration(milliseconds: 1000));
-    _cubit.fetchInitialTrendingMovies();
+    Get.find<TrendingController>().fetchInitialTrendingMovies();
   }
 
   @override

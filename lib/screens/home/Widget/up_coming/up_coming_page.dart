@@ -1,12 +1,9 @@
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:movie_app/configs/app_configs.dart';
 import 'package:movie_app/enum/load_status.dart';
-import 'package:movie_app/models/movie/movie.dart';
-import 'package:movie_app/repositories/up_coming_movie_repository.dart';
-import 'package:movie_app/screens/home/Widget/up_coming/up_coming_cubit.dart';
-import 'package:movie_app/screens/home/Widget/up_coming/up_coming_state.dart';
+import 'package:movie_app/screens/home/Widget/up_coming/up_coming_controller.dart';
 import 'package:movie_app/screens/movie_detail/movie_detail.dart';
 
 class PageUpComingMovies extends StatelessWidget {
@@ -16,13 +13,7 @@ class PageUpComingMovies extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) {
-        return UpComingCubit(
-            upComingRes: context.read<UpComingMoviesRepository>());
-      },
-      child: const MoviesChildPage(),
-    );
+    return const MoviesChildPage();
   }
 }
 
@@ -34,58 +25,37 @@ class MoviesChildPage extends StatefulWidget {
 }
 
 class _MoviesChildPageState extends State<MoviesChildPage> {
-  late UpComingCubit _cubit;
-
+  UpComingController controller =
+      Get.put<UpComingController>(UpComingController());
   @override
   void initState() {
+    controller.fetchInitialTrendingMovies();
     super.initState();
-    _cubit = context.read<UpComingCubit>();
-    _cubit.fetchInitialUpComingMovies();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<UpComingCubit, UpComingState>(
-      bloc: _cubit,
-      listenWhen: (pre, current) {
-        print('${pre.loadMovieStatus} -- ${current.loadMovieStatus}');
-        return current.loadMovieStatus == LoadStatus.loading ||
-            current.loadMovieStatus == LoadStatus.success;
+    return GetX<UpComingController>(
+      initState: (_) async {
+        Get.put<UpComingController>(UpComingController());
       },
-      listener: (context, state) {
-        if (state.loadMovieStatus == LoadStatus.loading) {
-          print('loadingggggggg .....');
-        } else if (state.loadMovieStatus == LoadStatus.success) {
-          // Report to analytics
-          print('Succcess.....');
-        } else {
-          print('check else ${state.loadMovieStatus.name} -- ');
-        }
-      },
-      buildWhen: (pre, state) {
-        return state.loadMovieStatus == LoadStatus.success ||
-            state.loadMovieStatus == LoadStatus.loading ||
-            state.loadMovieStatus == LoadStatus.failure;
-      },
-      builder: (context, state) {
-        if (state.loadMovieStatus == LoadStatus.failure) {
+      builder: (_) {
+        if (_.loadMovieStatus.value == LoadStatus.failure) {
           return const Text('faild to load');
-        } else if (state.loadMovieStatus == LoadStatus.loading) {
-          print('loading');
+        } else if (_.loadMovieStatus.value == LoadStatus.loading) {
           return const Center(
             child: CircularProgressIndicator(),
           );
         } else {
-          return buildSuccessList(
-            state.movies,
-          );
+          return buildSuccessList();
         }
       },
     );
   }
 
-  Widget buildSuccessList(List<Movie> items) {
-    double sizeHeight = MediaQuery.of(context).size.height;
+  Widget buildSuccessList() {
+    final items = Get.find<UpComingController>().listMovieUpComing.value;
+
     return Container(
       height: 220,
       padding: const EdgeInsets.symmetric(vertical: 15),
@@ -112,16 +82,18 @@ class _MoviesChildPageState extends State<MoviesChildPage> {
             },
           ),
           itemBuilder: (BuildContext context, int index) {
-            return buildCardUpComing(context, index, items);
+            return buildCardUpComing(context, index);
           },
-          itemCount: 10,
+          itemCount: items.length > 10 ? 10 : items.length,
           viewportFraction: 0.38,
           scale: 1,
           fade: 0.3),
     );
   }
 
-  Widget buildCardUpComing(BuildContext context, int index, List<Movie> items) {
+  Widget buildCardUpComing(BuildContext context, int index) {
+    final items = Get.find<UpComingController>().listMovieUpComing.value;
+
     return GestureDetector(
       onTap: () => {
         Navigator.push(context, MaterialPageRoute(builder: (context) {

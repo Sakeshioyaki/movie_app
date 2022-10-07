@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:movie_app/database/secure_storage_helper.dart';
 import 'package:movie_app/utils/logger.dart';
 
 class ApiInterceptors extends InterceptorsWrapper {
@@ -11,10 +10,10 @@ class ApiInterceptors extends InterceptorsWrapper {
     final method = options.method;
     final uri = options.uri;
     final data = options.data;
-    final token = await SecureStorageHelper.instance.getToken();
-    if (token != null) {
-      options.headers['Authorization'] = 'Bearer ${token.accessToken}';
-    }
+    // final token = await SecureStorageHelper.instance.getToken();
+    // if (token != null) {
+    //   options.headers['Authorization'] = 'Bearer ${token.accessToken}';
+    // }
     if (method == 'GET') {
       logger.log(
           "✈️ REQUEST[$method] => PATH: $uri \n Token: ${options.headers}",
